@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <link rel="stylesheet" href="css/style.css">
-    <title>Harits Web | Blog</title>
-</head>
-<body>
-    <h1>Halaman Blog</h1>
-</body>
-</html>
+{{-- @dd($posts); --}}
+
+@extends('layouts.main')
+
+@section('container')
+    {{-- <h1>Halaman Blog</h1> --}}
+    @foreach ($posts as $post)
+        <article class="mb-5">
+        </article>
+        <h2>
+            <a href="/blog/{{ $post['slug'] }}">
+                {{ $post['title'] }}
+            </a>
+        </h2>
+        <h5>{{ $post['author'] }}</h5>
+        <p>{{ $post['body'] }}</p>
+    @endforeach
+@endsection
