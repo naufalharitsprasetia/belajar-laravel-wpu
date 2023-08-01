@@ -2,39 +2,48 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
-class Post
+class Post extends Model
 {
-    private static $blog_posts =
-    [
-        [
-            "title" => "Judul Post Pertama",
-            "slug" => "judul-post-pertama",
-            "author" => "Sandhika Galih",
-            "body" => "Lorem ipsum dolor sit amet, Reprehenderit a similique autem omnis ipsa culpa quam perferendis. Earum nostrum, vitae placeat quos unde amet, repudiandae commodi quasi beatae ipsa blanditiis."
-        ],
-        [
-            "title" => "Judul Post Sandhika",
-            "slug" => "judul-post-kedua",
-            "author" => "Doddy",
-            "body" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit a similique autem omnis ipsa culpa quam perferendis. Earum nostrum, vitae placeat quos unde amet, repudiandae commodi quasi beatae ipsa blanditiis."
-        ],
-        [
-            "title" => "Judul Post Ketiga",
-            "slug" => "judul-post-ketiga",
-            "author" => "Erick",
-            "body" => "Lorem ipsum, consectetur adipisicing elit. Reprehenderit a similique autem omnis ipsa culpa quam perferendis. Earum nostrum, vitae placeat quos unde amet, repudiandae commodi quasi beatae ipsa blanditiis."
-        ]
-    ];
+    use HasFactory;
 
-    public static function all()
+    protected $guarded = ['id'];
+    protected $with = ['category', 'author'];
+
+    public function scopeFilter(Builder $query, array $filters): void
     {
-        return collect(self::$blog_posts);
+
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->where('title', 'like', '%' . $search . '%')
+                ->orWhere('body', 'like', '%' . $search . '%');
+        });
+
+        $query->when($filters['category'] ?? false, function (Builder $query, $category) {
+            $query->whereHas('category', function ($query) use ($category) {
+                $query->where('slug', $category);
+            });
+        });
+
+        $query->when(
+            $filters['author'] ?? false,
+            fn ($query, $author) =>
+            $query->whereHas(
+                'author',
+                fn ($query) =>
+                $query->where('username', $author)
+            )
+        );
     }
 
-    public static function find($slug)
+    public function category()
     {
-        $posts = static::all();
-        return $posts->firstWhere('slug', $slug);
+        return $this->belongsTo(Category::class);
+    }
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

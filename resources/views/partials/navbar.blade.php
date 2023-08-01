@@ -8,15 +8,27 @@
          <div class="collapse navbar-collapse" id="navbarNav">
              <ul class="navbar-nav">
                  <li class="nav-item">
-                     <a class="nav-link {{ $title === 'Home' ? 'active' : '' }}" href="/">Home</a>
+                     <a class="nav-link {{ $active === 'home' ? 'active' : '' }}" href="/">Home</a>
                  </li>
                  <li class="nav-item">
-                     <a class="nav-link {{ $title === 'About' ? 'active' : '' }}" href="/about">About</a>
+                     <a class="nav-link {{ $active === 'about' ? 'active' : '' }}" href="/about">About</a>
                  </li>
                  <li class="nav-item">
-                     <a class="nav-link {{ $title === 'Blog' ? 'active' : '' }}" href="/blog">Blog</a>
+                     <a class="nav-link {{ $active === 'blog' ? 'active' : '' }}" href="/blog">Blog</a>
                  </li>
-
+                 <li class="nav-item">
+                     <a class="nav-link {{ $active === 'categories' ? 'active' : '' }}"
+                         href="/categories">Categories</a>
+                 </li>
+                 <li class="nav-item">
+                     <a class="nav-link {{ $active === 'authors' ? 'active' : '' }}" href="/authors">Authors</a>
+                 </li>
+             </ul>
+             <ul class="navbar-nav ms-auto">
+                 <li class="nav-item">
+                     <a href="/login" class="nav-link {{ $active === 'login' ? 'active' : '' }}"><i
+                             class="bi bi-box-arrow-in-right"></i> Login</a>
+                 </li>
              </ul>
          </div>
      </div>
