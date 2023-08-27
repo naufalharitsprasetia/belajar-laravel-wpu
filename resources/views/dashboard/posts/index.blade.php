@@ -5,13 +5,13 @@
         <h1 class="h2">My Posts</h1>
     </div>
 
+    @if (session()->has('success'))
+        <div class="alert alert-success col-lg-12" role="alert">
+            {{ session('success') }}
+        </div>
+    @endif
     <div class="table-responsive small col-lg-12">
         <a href="/dashboard/posts/create" class="btn btn-primary mb-3">Create New Posts</a>
-        @if (session()->has('success'))
-            <div class="alert alert-success" role="alert">
-                {{ session('success') }}
-            </div>
-        @endif
         <table class="table table-striped table-sm">
             <thead>
                 <tr>
@@ -30,10 +30,14 @@
                         <td>
                             <a href="/dashboard/posts/{{ $post->slug }}" class="badge bg-info "><i
                                     class="bi bi-eye"></i></a>
-                            <a href="/dashboard/posts/{{ $post->id }}" class="badge bg-warning "><i
+                            <a href="/dashboard/posts/{{ $post->slug }}/edit" class="badge bg-warning "><i
                                     class="bi bi-pencil"></i></a>
-                            <a href="/dashboard/posts/{{ $post->id }}" class="badge bg-danger "><i
-                                    class="bi bi-x-circle"></i></a>
+                            <form action="/dashboard/posts/{{ $post->slug }}" method="post" class="d-inline">
+                                @method('delete')
+                                @csrf
+                                <button class="badge bg-danger border-0" onclick="return confirm('Are you Sure?')"><i
+                                        class="bi bi-x-circle"></i></button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach
